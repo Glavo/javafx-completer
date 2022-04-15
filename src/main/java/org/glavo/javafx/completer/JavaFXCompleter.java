@@ -12,10 +12,11 @@ public class JavaFXCompleter {
         this.modules = modules;
     }
 
-
     public JavaFXCompleter.Builder builder() {
         return new Builder();
     }
+
+
 
     public static final class Builder {
         private EnumSet<JavaFXModule> modules = EnumSet.noneOf(JavaFXModule.class);

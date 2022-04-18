@@ -1,6 +1,10 @@
 package org.glavo.javafx.completer;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public final class JavaFXVersion implements Comparable<JavaFXVersion> {
+
     private final int major;
     private final int minor;
     private final int patch;
@@ -8,19 +12,41 @@ public final class JavaFXVersion implements Comparable<JavaFXVersion> {
 
     private String str;
 
-    public JavaFXVersion(int major, int minor, int patch, int additional) {
-        this.major = major;
-        this.minor = minor;
-        this.patch = patch;
-        this.additional = additional;
+    private JavaFXVersion(int major, int minor, int patch, int additional) {
+        this(major, minor, patch, additional, null);
     }
 
-    public JavaFXVersion(int major, int minor, int patch, int additional, String str) {
+    private JavaFXVersion(int major, int minor, int patch, int additional, String str) {
         this.major = major;
         this.minor = minor;
         this.patch = patch;
         this.additional = additional;
         this.str = str;
+    }
+
+    private static final Pattern versionPattern = Pattern.compile("^(?<major>\\d+)(\\.(?<minor>\\d+)(\\.(?<patch>\\d+)(\\.(?<additional>\\d+))?)?)?$");
+
+    public static final JavaFXVersion JAVAFX_11 = new JavaFXVersion(11, -1, -1, -1);
+    public static final JavaFXVersion JAVAFX_17 = new JavaFXVersion(17, -1, -1, -1);
+
+
+    public static JavaFXVersion of(String str) {
+        Matcher matcher = versionPattern.matcher(str);
+        if (!matcher.matches()) {
+            throw new IllegalArgumentException();
+        }
+
+        String major = matcher.group("major");
+        String minor = matcher.group("minor");
+        String patch = matcher.group("patch");
+        String additional = matcher.group("additional");
+
+        return new JavaFXVersion(
+                major != null ? Integer.parseInt(major) : -1,
+                minor != null ? Integer.parseInt(minor) : -1,
+                patch != null ? Integer.parseInt(patch) : -1,
+                additional != null ? Integer.parseInt(additional) : -1
+        );
     }
 
     @Override

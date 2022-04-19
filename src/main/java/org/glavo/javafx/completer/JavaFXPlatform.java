@@ -4,7 +4,6 @@ import java.util.Locale;
 
 public class JavaFXPlatform {
 
-
     private final OperatingSystem operatingSystem;
     private final Architecture architecture;
 
@@ -13,6 +12,14 @@ public class JavaFXPlatform {
     private JavaFXPlatform(OperatingSystem operatingSystem, Architecture architecture) {
         this.operatingSystem = operatingSystem;
         this.architecture = architecture;
+    }
+
+    public Architecture getArchitecture() {
+        return architecture;
+    }
+
+    public OperatingSystem getOperatingSystem() {
+        return operatingSystem;
     }
 
     @Override

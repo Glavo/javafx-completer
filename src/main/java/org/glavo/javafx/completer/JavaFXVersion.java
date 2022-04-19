@@ -26,10 +26,6 @@ public final class JavaFXVersion implements Comparable<JavaFXVersion> {
 
     private static final Pattern versionPattern = Pattern.compile("^(?<major>\\d+)(\\.(?<minor>\\d+)(\\.(?<patch>\\d+)(\\.(?<additional>\\d+))?)?)?$");
 
-    public static final JavaFXVersion JAVAFX_11 = new JavaFXVersion(11, -1, -1, -1);
-    public static final JavaFXVersion JAVAFX_17 = new JavaFXVersion(17, -1, -1, -1);
-
-
     public static JavaFXVersion of(String str) {
         Matcher matcher = versionPattern.matcher(str);
         if (!matcher.matches()) {

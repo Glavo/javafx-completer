@@ -1,9 +1,11 @@
 package org.glavo.javafx.completer;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
+import java.util.Objects;
 
 public class JavaFXCompleter {
 
@@ -20,6 +22,7 @@ public class JavaFXCompleter {
     private int maxMajorVersion = -1;
 
     private LinkedHashMap<String, String> repos;
+    private Path storageDir;
 
     public JavaFXCompleter addModule(JavaFXModule module) {
         if (!this.modules.contains(module)) {
@@ -99,6 +102,60 @@ public class JavaFXCompleter {
 
     public JavaFXCompleter addMavenLocalRepository(String description) {
         addMavenRepository(Paths.get(System.getProperty("user.home"), ".m2", "repository").toUri().toString(), description);
+        return this;
+    }
+
+    public JavaFXCompleter appName(String name) {
+        Objects.requireNonNull(name);
+        if ("".equals(name) || ".".equals(name) || "..".equals(name) || "~".equals(name)
+            || name.indexOf('/') >= 0
+            || name.indexOf('\\') >= 0
+            || name.indexOf(':') >= 0
+            || name.indexOf(';') >= 0
+        ) {
+            throw new IllegalArgumentException();
+        }
+
+        Path dir = null;
+        try {
+            switch (JavaFXPlatform.getCurrent().getOperatingSystem()) {
+                case WINDOWS: {
+                    String appdata = System.getenv("APPDATA");
+                    if (appdata != null) {
+                        if (!Files.isRegularFile(Paths.get(appdata))) {
+                            dir = Paths.get(appdata, name, ".openjfx", "cache");
+                        }
+                    }
+                    break;
+                }
+                case LINUX: {
+                    String dataHome = System.getenv("XDG_DATA_HOME");
+                    if (dataHome != null) {
+                        if (!Files.isRegularFile(Paths.get(dataHome))) {
+                            dir = Paths.get(dataHome, ".openjfx", "cache");
+                        }
+                    }
+                    break;
+                }
+                case MACOS: {
+                    dir = Paths.get(System.getProperty("user.home"), "Library", "Application Support", name, ".openjfx", "cache");
+                    break;
+                }
+
+            }
+        } catch (Throwable ignored) {
+        }
+
+        if (dir == null) {
+            dir = Paths.get(System.getProperty("user.home"), "." + name, ".openjfx", "cache");
+        }
+
+        this.storageDir = dir;
+        return this;
+    }
+
+    public JavaFXCompleter storageDir(Path dir) {
+        this.storageDir = dir;
         return this;
     }
 

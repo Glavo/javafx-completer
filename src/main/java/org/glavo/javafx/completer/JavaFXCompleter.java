@@ -7,6 +7,16 @@ public class JavaFXCompleter {
     private final EnumSet<JavaFXModule> modules = EnumSet.noneOf(JavaFXModule.class);
     private boolean allowFallback = false;
 
+    private JavaFXVersion version;
+    private int majorVersion = -1;
+
+    private JavaFXVersion minVersion;
+    private int minMajorVersion = -1;
+
+    private JavaFXVersion maxVersion;
+    private int maxMajorVersion = -1;
+
+
     public JavaFXCompleter addModule(JavaFXModule module) {
         if (!this.modules.contains(module)) {
             this.modules.addAll(module.getDependentModules());
@@ -25,8 +35,38 @@ public class JavaFXCompleter {
         return this;
     }
 
+    public JavaFXCompleter version(JavaFXVersion version) {
+        this.version = version;
+        return this;
+    }
+
+    public JavaFXCompleter majorVersion(int majorVersion) {
+        this.majorVersion = majorVersion;
+        return this;
+    }
+
     public JavaFXCompleter allowFallback() {
         allowFallback = true;
+        return this;
+    }
+
+    public JavaFXCompleter minVersion(JavaFXVersion version) {
+        this.minVersion = version;
+        return this;
+    }
+
+    public JavaFXCompleter minMajorVersion(int majorVersion) {
+        this.minMajorVersion = majorVersion;
+        return this;
+    }
+
+    public JavaFXCompleter maxVersion(JavaFXVersion version) {
+        this.maxVersion = version;
+        return this;
+    }
+
+    public JavaFXCompleter maxMajorVersion(int majorVersion) {
+        this.maxMajorVersion = majorVersion;
         return this;
     }
 

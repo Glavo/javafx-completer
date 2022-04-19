@@ -25,7 +25,8 @@ dependencies {
 }
 
 tasks.compileJava {
-    options.release.set(8)
+    sourceCompatibility = "1.8"
+    targetCompatibility = "1.8"
 }
 
 val compileModuleInfo = tasks.create<org.glavo.mic.tasks.CompileModuleInfo>("compileModuleInfo") {

@@ -1,6 +1,9 @@
 package org.glavo.javafx.completer;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.EnumSet;
+import java.util.LinkedHashMap;
 
 public class JavaFXCompleter {
 
@@ -16,6 +19,7 @@ public class JavaFXCompleter {
     private JavaFXVersion maxVersion;
     private int maxMajorVersion = -1;
 
+    private LinkedHashMap<String, String> repos;
 
     public JavaFXCompleter addModule(JavaFXModule module) {
         if (!this.modules.contains(module)) {
@@ -67,6 +71,34 @@ public class JavaFXCompleter {
 
     public JavaFXCompleter maxMajorVersion(int majorVersion) {
         this.maxMajorVersion = majorVersion;
+        return this;
+    }
+
+    public JavaFXCompleter addMavenRepository(String url, String description) {
+        if (repos == null) {
+            repos = new LinkedHashMap<>();
+        }
+
+        if (url.endsWith("/")) {
+            url = url.substring(0, url.length() - 1);
+        }
+
+        repos.put(url, description);
+        return this;
+    }
+
+    public JavaFXCompleter addMavenCentralRepository(String description) {
+        addMavenRepository("https://repo1.maven.org/maven2", description);
+        return this;
+    }
+
+    public JavaFXCompleter addMavenCentralAliyunMirrorRepository(String description) {
+        addMavenRepository("https://maven.aliyun.com/repository/public", description);
+        return this;
+    }
+
+    public JavaFXCompleter addMavenLocalRepository(String description) {
+        addMavenRepository(Paths.get(System.getProperty("user.home"), ".m2", "repository").toUri().toString(), description);
         return this;
     }
 

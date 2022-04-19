@@ -1,40 +1,25 @@
 package org.glavo.javafx.completer;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.Set;
 
 public class JavaFXCompleter {
 
-    private final Set<JavaFXModule> modules;
+    private final EnumSet<JavaFXModule> modules = EnumSet.noneOf(JavaFXModule.class);
 
-    public JavaFXCompleter(Set<JavaFXModule> modules) {
-        this.modules = modules;
+    public JavaFXCompleter addModule(JavaFXModule module) {
+        this.modules.add(module);
+        return this;
     }
 
-    public JavaFXCompleter.Builder builder() {
-        return new Builder();
+    public JavaFXCompleter addModules(JavaFXModule... modules) {
+        Collections.addAll(this.modules, modules);
+        return this;
     }
 
-
-
-    public static final class Builder {
-        private EnumSet<JavaFXModule> modules = EnumSet.noneOf(JavaFXModule.class);
-
-        public Builder addModule(JavaFXModule module) {
-            this.modules.add(module);
-            return this;
-        }
-
-        public Builder addModules(JavaFXModule... modules) {
-            Collections.addAll(this.modules, modules);
-            return this;
-        }
-
-        public JavaFXCompleter build() {
-            modules = null;
-
-            return null; // TODO
-        }
+    public JavaFXCompleter addModules(Collection<JavaFXModule> modules) {
+        this.modules.addAll(modules);
+        return this;
     }
 }
